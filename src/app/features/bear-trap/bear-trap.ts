@@ -28,21 +28,26 @@ const HELP_CONTENT: Record<'power' | 'gear', HelpDialogData> = {
   power: {
     title: 'Where do I find these numbers?',
     steps: [
-      'Open your governor profile and tap your power number to open the power breakdown screen.',
-      "Find the troop attribute bonuses section — it lists Attack, Defense, Health, and Lethality separately for 'All troops' and for each troop type (Infantry, Lancer, Marksman).",
-      'Enter each percentage here as a decimal — e.g. a bonus shown as 263% is entered as 2.63.',
+      'Tap your power number to open Bonus Overview, then open (or scroll to) the Military section.',
+      "It lists 'Troops' Attack/Defense/Lethality/Health' — that's the 'All troops' row in this app — followed by the same four stats for each troop type (Infantry, Lancer, Marksman further down).",
+      'Enter each percentage here as a decimal — e.g. a bonus shown as 482.39% is entered as 4.8239.',
     ],
-    images: [],
+    images: [
+      { src: 'help/power-bonus-overview.jpg', alt: 'Bonus Overview screen, Military section, showing Troops’ and Infantry Attack/Defense/Lethality/Health percentages', caption: 'Bonus Overview → Military' },
+    ],
   },
   gear: {
     title: 'How do I read equipped vs. unequipped gear stats?',
     steps: [
-      "Open your gear screen and select one troop type's full gear set (all 4 pieces).",
-      "With the set equipped, note the Attack and Lethality bonus shown for that troop type — enter those under 'Equipped'.",
-      "Unequip that set (or use the game's own before/after comparison, if it shows one) and note the same two numbers — enter those under 'Unequipped'.",
-      'Repeat for each troop type. The app subtracts unequipped from equipped for you — no need to do the math yourself.',
+      'Open any hero\'s Stats tab and tap the list icon to open Hero Overall Stats, then look at the Expedition section — it shows your account\'s current Attack/Defense/Lethality/Health for each troop type (this is the same for every hero, not specific to whoever you opened).',
+      'With a troop type\'s gear set unequipped, note that type\'s Attack and Lethality — enter those under \'Unequipped\'.',
+      'Equip the full 4-piece set for that troop type, reopen the same popup, and note Attack and Lethality again — enter those under \'Equipped\'.',
+      'Repeat for each troop type. Defense and Health shown here aren\'t used by this calculator — just Attack and Lethality. The app subtracts unequipped from equipped for you.',
     ],
-    images: [],
+    images: [
+      { src: 'help/gear-unequipped.jpg', alt: 'Hero Overall Stats popup, Expedition section, with the troop gear set unequipped', caption: 'Unequipped' },
+      { src: 'help/gear-equipped.jpg', alt: 'Hero Overall Stats popup, Expedition section, with the troop gear set equipped', caption: 'Equipped' },
+    ],
   },
 };
 
