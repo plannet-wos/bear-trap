@@ -3,6 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,12 +12,39 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { BEAR_TRAP_HEROES } from '../../core/data/heroes';
 import { TROOP_TIER_TABLE } from '../../core/data/troop-tier-table';
 import { BearTrapInputs, HeroClass, LineupResult, defaultBearTrapInputs } from '../../core/models/bear-trap.model';
 import { CalculatorService } from '../../core/services/calculator.service';
 import { SaveCodeService } from '../../core/services/save-code.service';
+import { HelpDialog, HelpDialogData } from '../../shared/help-dialog/help-dialog';
+
+/** Content for the two (i) help popups — see openHelp(). Screenshots go in
+ *  public/help/ and get an `images` entry here once available; until then the
+ *  dialog just shows "Screenshots coming soon." */
+const HELP_CONTENT: Record<'power' | 'gear', HelpDialogData> = {
+  power: {
+    title: 'Where do I find these numbers?',
+    steps: [
+      'Open your governor profile and tap your power number to open the power breakdown screen.',
+      "Find the troop attribute bonuses section — it lists Attack, Defense, Health, and Lethality separately for 'All troops' and for each troop type (Infantry, Lancer, Marksman).",
+      'Enter each percentage here as a decimal — e.g. a bonus shown as 263% is entered as 2.63.',
+    ],
+    images: [],
+  },
+  gear: {
+    title: 'How do I read equipped vs. unequipped gear stats?',
+    steps: [
+      "Open your gear screen and select one troop type's full gear set (all 4 pieces).",
+      "With the set equipped, note the Attack and Lethality bonus shown for that troop type — enter those under 'Equipped'.",
+      "Unequip that set (or use the game's own before/after comparison, if it shows one) and note the same two numbers — enter those under 'Unequipped'.",
+      'Repeat for each troop type. The app subtracts unequipped from equipped for you — no need to do the math yourself.',
+    ],
+    images: [],
+  },
+};
 
 const STAR_OPTIONS = [0, 1, 2, 3, 4, 5];
 const WIDGET_OPTIONS = Array.from({ length: 11 }, (_, i) => i);
@@ -68,6 +96,7 @@ const BASE_STAT_SCOPES: { key: BaseStatScopeKey; label: string }[] = [
     MatSlideToggleModule,
     MatSnackBarModule,
     MatTableModule,
+    MatTooltipModule,
   ],
   templateUrl: './bear-trap.html',
   styleUrl: './bear-trap.scss',
@@ -80,6 +109,7 @@ export class BearTrap {
   readonly troopTierKeys = TROOP_TIER_TABLE.map(r => r.key);
   readonly troopTypeScopes = TROOP_TYPE_SCOPES;
   readonly baseStatScopes = BASE_STAT_SCOPES;
+  readonly gearReadingKeys: ('equipped' | 'unequipped')[] = ['equipped', 'unequipped'];
 
   readonly inputs = signal<BearTrapInputs>(defaultBearTrapInputs(BEAR_TRAP_HEROES.map(h => h.name)));
   readonly results = signal<LineupResult[]>([]);
@@ -114,7 +144,12 @@ export class BearTrap {
     private readonly calculator: CalculatorService,
     private readonly saveCode: SaveCodeService,
     private readonly snackBar: MatSnackBar,
+    private readonly dialog: MatDialog,
   ) {}
+
+  openHelp(kind: 'power' | 'gear'): void {
+    this.dialog.open(HelpDialog, { data: HELP_CONTENT[kind], autoFocus: false });
+  }
 
   updateLatestGeneration(gen: number): void {
     this.latestGeneration.set(gen);
@@ -138,10 +173,13 @@ export class BearTrap {
     }));
   }
 
-  updateGear(type: 'inf' | 'lanc' | 'mark', field: 'lethality' | 'attack', value: number): void {
+  updateGear(type: 'inf' | 'lanc' | 'mark', which: 'equipped' | 'unequipped', field: 'lethality' | 'attack', value: number): void {
     this.inputs.update(inputs => ({
       ...inputs,
-      gear: { ...inputs.gear, [type]: { ...inputs.gear[type], [field]: value } },
+      gear: {
+        ...inputs.gear,
+        [type]: { ...inputs.gear[type], [which]: { ...inputs.gear[type][which], [field]: value } },
+      },
     }));
   }
 
@@ -149,8 +187,8 @@ export class BearTrap {
     return this.inputs().baseStats[scope][field];
   }
 
-  gearValue(type: 'inf' | 'lanc' | 'mark', field: 'lethality' | 'attack'): number {
-    return this.inputs().gear[type][field];
+  gearValue(type: 'inf' | 'lanc' | 'mark', which: 'equipped' | 'unequipped', field: 'lethality' | 'attack'): number {
+    return this.inputs().gear[type][which][field];
   }
 
   tierValue(type: 'inf' | 'lanc' | 'mark'): string {

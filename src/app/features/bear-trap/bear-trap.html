@@ -81,7 +81,13 @@
         </mat-form-field>
         <p class="hint">Effective squad size: {{ effectiveSquadSize() | number }}</p>
 
-        <h3>Base stats (from the power screen, no heroes)</h3>
+        <h3>
+          Base stats (from the power screen, no heroes)
+          <button mat-icon-button class="help-icon" type="button" matTooltip="Where do I find these?"
+                  (click)="openHelp('power')" aria-label="Help: where do I find these numbers?">
+            <mat-icon>help_outline</mat-icon>
+          </button>
+        </h3>
         <div class="stat-grid">
           @for (scope of baseStatScopes; track scope.key) {
             <div class="stat-row">
@@ -100,24 +106,34 @@
           }
         </div>
 
-        <h3>Gear bonus (equipped − unequipped, per troop type)</h3>
-        <div class="stat-grid">
-          @for (type of troopTypeScopes; track type.key) {
-            <div class="stat-row">
-              <span class="stat-label">{{ type.label }}</span>
-              <mat-form-field appearance="outline" class="tight-field">
-                <mat-label>Lethality</mat-label>
-                <input matInput type="number" step="0.0001" [value]="gearValue(type.key, 'lethality')"
-                       (change)="updateGear(type.key, 'lethality', $any($event.target).valueAsNumber)" />
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="tight-field">
-                <mat-label>Attack</mat-label>
-                <input matInput type="number" step="0.0001" [value]="gearValue(type.key, 'attack')"
-                       (change)="updateGear(type.key, 'attack', $any($event.target).valueAsNumber)" />
-              </mat-form-field>
-            </div>
-          }
-        </div>
+        <h3>
+          Gear bonus, per troop type
+          <button mat-icon-button class="help-icon" type="button" matTooltip="How do I read equipped vs. unequipped?"
+                  (click)="openHelp('gear')" aria-label="Help: how do I read equipped vs. unequipped gear stats?">
+            <mat-icon>help_outline</mat-icon>
+          </button>
+        </h3>
+        <p class="hint">Enter what the game shows with the gear set equipped, and again with it removed — the app works out the difference.</p>
+        @for (type of troopTypeScopes; track type.key) {
+          <div class="gear-group">
+            <span class="stat-label">{{ type.label }}</span>
+            @for (which of gearReadingKeys; track which) {
+              <div class="stat-row">
+                <span class="gear-which-label">{{ which === 'equipped' ? 'Equipped' : 'Unequipped' }}</span>
+                <mat-form-field appearance="outline" class="tight-field">
+                  <mat-label>Lethality</mat-label>
+                  <input matInput type="number" step="0.0001" [value]="gearValue(type.key, which, 'lethality')"
+                         (change)="updateGear(type.key, which, 'lethality', $any($event.target).valueAsNumber)" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="tight-field">
+                  <mat-label>Attack</mat-label>
+                  <input matInput type="number" step="0.0001" [value]="gearValue(type.key, which, 'attack')"
+                         (change)="updateGear(type.key, which, 'attack', $any($event.target).valueAsNumber)" />
+                </mat-form-field>
+              </div>
+            }
+          </div>
+        }
 
         <h3>Troop tier</h3>
         <div class="stat-grid">
