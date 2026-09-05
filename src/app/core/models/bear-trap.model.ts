@@ -27,11 +27,19 @@ export interface BaseStats {
   mark: BaseStat;
 }
 
-/** Gear's Lethality/Attack bonus delta (equipped vs. unequipped) per troop type. */
+/** Lethality/Attack read off the gear comparison screen with a troop type's full
+ *  gear set equipped, and again with it removed — the app computes the delta
+ *  the calculator actually needs (see calculator.service.ts's gearFor()),
+ *  rather than asking the user to subtract it themselves. */
+export interface GearReading {
+  equipped: BaseStat;
+  unequipped: BaseStat;
+}
+
 export interface GearBonus {
-  inf: BaseStat;
-  lanc: BaseStat;
-  mark: BaseStat;
+  inf: GearReading;
+  lanc: GearReading;
+  mark: GearReading;
 }
 
 export interface TroopTierSelection {
@@ -61,13 +69,13 @@ export interface BearTrapInputs {
   heroLevels: HeroLevel[];
 }
 
-/** One candidate Infantry/Lancer/Marksman trio and its computed result. */
 export function defaultBearTrapInputs(heroNames: string[]): BearTrapInputs {
-  const zero: BaseStat = { lethality: 0, attack: 0 };
+  const zero = (): BaseStat => ({ lethality: 0, attack: 0 });
+  const zeroGear = (): GearReading => ({ equipped: zero(), unequipped: zero() });
   return {
     squadSize: 150000,
-    baseStats: { allTroops: { ...zero }, inf: { ...zero }, lanc: { ...zero }, mark: { ...zero } },
-    gear: { inf: { ...zero }, lanc: { ...zero }, mark: { ...zero } },
+    baseStats: { allTroops: zero(), inf: zero(), lanc: zero(), mark: zero() },
+    gear: { inf: zeroGear(), lanc: zeroGear(), mark: zeroGear() },
     troopTiers: { inf: 'FC5 T10', lanc: 'FC5 T10', mark: 'FC5 T10' },
     pets: {
       caveLionActive: false, caveLionLevel: 1,

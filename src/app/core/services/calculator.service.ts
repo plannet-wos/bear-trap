@@ -53,8 +53,14 @@ function baseStatFor(type: TroopType, inputs: BearTrapInputs): BaseStat {
   return { lethality: perType.lethality + all.lethality, attack: perType.attack + all.attack };
 }
 
+/** The delta the calculator actually needs — equipped minus unequipped — from
+ *  the two raw readings the user enters (see GearReading's doc comment). */
 function gearFor(type: TroopType, inputs: BearTrapInputs): BaseStat {
-  return type === 'Inf' ? inputs.gear.inf : type === 'Lan' ? inputs.gear.lanc : inputs.gear.mark;
+  const reading = type === 'Inf' ? inputs.gear.inf : type === 'Lan' ? inputs.gear.lanc : inputs.gear.mark;
+  return {
+    lethality: reading.equipped.lethality - reading.unequipped.lethality,
+    attack: reading.equipped.attack - reading.unequipped.attack,
+  };
 }
 
 function petBonus(level: number, key: 'caveLion' | 'snowApe' | 'sabreTooth'): number {

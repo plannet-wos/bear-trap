@@ -52,6 +52,44 @@
   font-weight: 500;
 }
 
+h3 {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.help-icon {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+
+  ::ng-deep .mat-mdc-button-touch-target { width: 28px; height: 28px; }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.gear-group {
+  margin-bottom: 12px;
+
+  > .stat-label {
+    display: block;
+    width: auto;
+    margin-bottom: 4px;
+  }
+}
+
+.gear-which-label {
+  width: 90px;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
 .pet-row {
   display: flex;
   align-items: center;
