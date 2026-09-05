@@ -1,0 +1,30 @@
+name: Deploy to Firebase
+
+# Hosting-only — unlike the plannet-wos hub repo, this repo does not own Firestore rules for the
+# shared tal-coordinator project (see plannet-wos/README.md's "Firestore rules ownership"), so
+# there's no `firestore:rules` deploy step here, just Hosting. Every push to main deploys.
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: tal-coordinator
+          channelId: live
