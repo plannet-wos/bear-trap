@@ -6,7 +6,7 @@ optimal Bear Trap hero lineup (Infantry/Lancer/Marksman trio) and the troop rati
 Users enter their account stats, gear, troop tiers, pets, and each hero's star/widget level; the
 app brute-forces every combination among owned heroes and ranks them by score.
 
-Live: **https://wos-bear-trap.web.app**
+Live: **https://bear-trap.web.app**
 Part of the **[Plannet WOS](https://plannet-wos.web.app)** suite.
 
 ---
@@ -19,7 +19,7 @@ Part of the **[Plannet WOS](https://plannet-wos.web.app)** suite.
 4. **All calculation is client-side.** No backend, no server calls for the calculator itself. The
    only server-side dependency is Firestore for the save-code feature (read/write a 4-char code →
    JSON blob of the user's inputs, see `core/services/save-code.service.ts`).
-5. **Deployment:** Firebase Hosting, site name `wos-bear-trap`. Firestore rules for the
+5. **Deployment:** Firebase Hosting, site name `bear-trap`. Firestore rules for the
    `bear_trap_saves` collection live in the `plannet-wos` repo (sole owner/deployer of the shared
    `tal-coordinator` project's `firestore.rules`) — this repo has no local copy and
    `firebase deploy` here only ever touches hosting.

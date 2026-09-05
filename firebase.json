@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "wos-bear-trap",
+    "site": "bear-trap",
     "public": "dist/bear-trap/browser",
     "ignore": [
       "firebase.json",

@@ -5,7 +5,7 @@ and the troop ratio to run it at. Enter your account stats, gear, troop tiers an
 heroes' star and widget levels — the app checks every Infantry/Lancer/Marksman combination among
 your owned heroes and ranks them by score, with the exact troop split for each.
 
-Live: **https://wos-bear-trap.web.app**
+Live: **https://bear-trap.web.app**
 Part of the **[Plannet WOS](https://plannet-wos.web.app)** suite.
 
 ## Model
@@ -53,7 +53,10 @@ To change that collection's rules, edit it there — see that repo's README.
 
 ## Deploying
 
-No CI workflow yet — deploy manually with `firebase deploy --only hosting` after `npm run build`.
+Every push to `main` auto-deploys via `.github/workflows/deploy.yml`: build, then
+`FirebaseExtended/action-hosting-deploy` for Hosting only — this repo doesn't own Firestore rules
+(see above), so there's no rules-deploy step here unlike the plannet-wos hub repo. Authenticates
+with the org-level `FIREBASE_SERVICE_ACCOUNT` secret shared across the plannet-wos repos.
 
 ## Contributing
 
