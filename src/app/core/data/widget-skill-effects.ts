@@ -33,13 +33,6 @@ export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByT
     '4': { Inf: { ChanceDamage: 0.2, DamageMultiply: 0.16 }, Lan: { ChanceDamage: 0.2, DamageMultiply: 0.16 }, Mar: { ChanceDamage: 0.2, DamageMultiply: 0.16 } },
     '5': { Inf: { ChanceDamage: 0.25, DamageMultiply: 0.2 }, Lan: { ChanceDamage: 0.25, DamageMultiply: 0.2 }, Mar: { ChanceDamage: 0.25, DamageMultiply: 0.2 } },
   },
-  "Bahiti": {
-    '1': { Inf: { ChanceDamage: 0.05 }, Lan: { ChanceDamage: 0.05 }, Mar: { ChanceDamage: 0.05 } },
-    '2': { Inf: { ChanceDamage: 0.1 }, Lan: { ChanceDamage: 0.1 }, Mar: { ChanceDamage: 0.1 } },
-    '3': { Inf: { ChanceDamage: 0.15 }, Lan: { ChanceDamage: 0.15 }, Mar: { ChanceDamage: 0.15 } },
-    '4': { Inf: { ChanceDamage: 0.2 }, Lan: { ChanceDamage: 0.2 }, Mar: { ChanceDamage: 0.2 } },
-    '5': { Inf: { ChanceDamage: 0.25 }, Lan: { ChanceDamage: 0.25 }, Mar: { ChanceDamage: 0.25 } },
-  },
   "Blanchette": {
     '1': { Inf: { Lethality: 0.05 }, Lan: { Lethality: 0.05 }, Mar: { Lethality: 0.05, ChanceDamage: 0.045 } },
     '2': { Inf: { Lethality: 0.1 }, Lan: { Lethality: 0.1 }, Mar: { Lethality: 0.1, ChanceDamage: 0.09 } },
@@ -60,20 +53,6 @@ export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByT
     '3': { Inf: { NormalDamage: 0.2 }, Lan: { NormalDamage: 0.2 }, Mar: { NormalDamage: 0.2 } },
     '4': { Inf: { NormalDamage: 0.25 }, Lan: { NormalDamage: 0.25 }, Mar: { NormalDamage: 0.25 } },
     '5': { Inf: { NormalDamage: 0.3 }, Lan: { NormalDamage: 0.3 }, Mar: { NormalDamage: 0.3 } },
-  },
-  "Charlie": {
-    '1': {  },
-    '2': {  },
-    '3': {  },
-    '4': {  },
-    '5': {  },
-  },
-  "Cloris": {
-    '1': {  },
-    '2': {  },
-    '3': {  },
-    '4': {  },
-    '5': {  },
   },
   "Dominic": {
     '1': { Inf: { DamageTakenUp: 0.045, DamageMultiply: 0.0712 }, Lan: { DamageTakenUp: 0.045, ChanceDamage: 0.12, DamageMultiply: 0.04 }, Mar: { DamageTakenUp: 0.045, DamageMultiply: 0.0712 } },
@@ -110,13 +89,6 @@ export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByT
     '4': { Inf: { Attack: 0.12, DefenseDown: 0.2 }, Lan: { Attack: 0.12, DefenseDown: 0.2, DamageMultiply: 0.2 }, Mar: { Attack: 0.12, DefenseDown: 0.2 } },
     '5': { Inf: { Attack: 0.15, DefenseDown: 0.25 }, Lan: { Attack: 0.15, DefenseDown: 0.25, DamageMultiply: 0.25 }, Mar: { Attack: 0.15, DefenseDown: 0.25 } },
   },
-  "Eugene": {
-    '1': {  },
-    '2': {  },
-    '3': {  },
-    '4': {  },
-    '5': {  },
-  },
   "Flint": {
     '1': { Inf: { Lethality: 0.05, Attack: 0.05, DamageMultiply: 0.2 }, Lan: { Lethality: 0.05, Attack: 0.05 }, Mar: { Lethality: 0.05, Attack: 0.05 } },
     '2': { Inf: { Lethality: 0.1, Attack: 0.1, DamageMultiply: 0.4 }, Lan: { Lethality: 0.1, Attack: 0.1 }, Mar: { Lethality: 0.1, Attack: 0.1 } },
@@ -146,13 +118,6 @@ export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByT
     '5': { Inf: { DamageMultiply: 0.15 }, Lan: { ChanceDamage: 0.5 }, Mar: { DamageMultiply: 0.15 } },
   },
   "Gatot": {
-    '1': {  },
-    '2': {  },
-    '3': {  },
-    '4': {  },
-    '5': {  },
-  },
-  "Gina": {
     '1': {  },
     '2': {  },
     '3': {  },
@@ -222,26 +187,12 @@ export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByT
     '4': { Inf: { Lethality: 0.2, DamageMultiply: 0.08 }, Lan: { Lethality: 0.2 }, Mar: { Lethality: 0.2 } },
     '5': { Inf: { Lethality: 0.25, DamageMultiply: 0.1 }, Lan: { Lethality: 0.25 }, Mar: { Lethality: 0.25 } },
   },
-  "Jasser": {
-    '1': { Inf: { Lethality: 0.05 }, Lan: { Lethality: 0.05 }, Mar: { Lethality: 0.05 } },
-    '2': { Inf: { Lethality: 0.1 }, Lan: { Lethality: 0.1 }, Mar: { Lethality: 0.1 } },
-    '3': { Inf: { Lethality: 0.15 }, Lan: { Lethality: 0.15 }, Mar: { Lethality: 0.15 } },
-    '4': { Inf: { Lethality: 0.2 }, Lan: { Lethality: 0.2 }, Mar: { Lethality: 0.2 } },
-    '5': { Inf: { Lethality: 0.25 }, Lan: { Lethality: 0.25 }, Mar: { Lethality: 0.25 } },
-  },
   "Jeronimo": {
     '1': { Inf: { Lethality: 0.05, Attack: 0.05, DamageMultiply: 0.024 }, Lan: { Lethality: 0.05, Attack: 0.05, DamageMultiply: 0.024 }, Mar: { Lethality: 0.05, Attack: 0.05, DamageMultiply: 0.024 } },
     '2': { Inf: { Lethality: 0.1, Attack: 0.1, DamageMultiply: 0.048 }, Lan: { Lethality: 0.1, Attack: 0.1, DamageMultiply: 0.048 }, Mar: { Lethality: 0.1, Attack: 0.1, DamageMultiply: 0.048 } },
     '3': { Inf: { Lethality: 0.15, Attack: 0.15, DamageMultiply: 0.072 }, Lan: { Lethality: 0.15, Attack: 0.15, DamageMultiply: 0.072 }, Mar: { Lethality: 0.15, Attack: 0.15, DamageMultiply: 0.072 } },
     '4': { Inf: { Lethality: 0.2, Attack: 0.2, DamageMultiply: 0.096 }, Lan: { Lethality: 0.2, Attack: 0.2, DamageMultiply: 0.096 }, Mar: { Lethality: 0.2, Attack: 0.2, DamageMultiply: 0.096 } },
     '5': { Inf: { Lethality: 0.25, Attack: 0.25, DamageMultiply: 0.12 }, Lan: { Lethality: 0.25, Attack: 0.25, DamageMultiply: 0.12 }, Mar: { Lethality: 0.25, Attack: 0.25, DamageMultiply: 0.12 } },
-  },
-  "Jessie": {
-    '1': { Inf: { Lethality: 0.05 }, Lan: { Lethality: 0.05 }, Mar: { Lethality: 0.05 } },
-    '2': { Inf: { Lethality: 0.1 }, Lan: { Lethality: 0.1 }, Mar: { Lethality: 0.1 } },
-    '3': { Inf: { Lethality: 0.15 }, Lan: { Lethality: 0.15 }, Mar: { Lethality: 0.15 } },
-    '4': { Inf: { Lethality: 0.2 }, Lan: { Lethality: 0.2 }, Mar: { Lethality: 0.2 } },
-    '5': { Inf: { Lethality: 0.25 }, Lan: { Lethality: 0.25 }, Mar: { Lethality: 0.25 } },
   },
   "Karol": {
     '1': { Inf: { Attack: 0.03, DamageTakenUp: 0.05 }, Lan: { Attack: 0.03, DamageTakenUp: 0.05 }, Mar: { Attack: 0.03, DamageTakenUp: 0.04545454545 } },
@@ -256,13 +207,6 @@ export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByT
     '3': { Inf: { DamageTakenUp: 0.06, DefenseDown: 0.15 }, Lan: { DamageTakenUp: 0.06, DefenseDown: 0.15 }, Mar: { DamageTakenUp: 0.06, DefenseDown: 0.15, ChanceDamage: 0.3 } },
     '4': { Inf: { DamageTakenUp: 0.08, DefenseDown: 0.2 }, Lan: { DamageTakenUp: 0.08, DefenseDown: 0.2 }, Mar: { DamageTakenUp: 0.08, DefenseDown: 0.2, ChanceDamage: 0.4 } },
     '5': { Inf: { DamageTakenUp: 0.1, DefenseDown: 0.25 }, Lan: { DamageTakenUp: 0.1, DefenseDown: 0.25 }, Mar: { DamageTakenUp: 0.1, DefenseDown: 0.25, ChanceDamage: 0.5 } },
-  },
-  "Ling": {
-    '1': {  },
-    '2': {  },
-    '3': {  },
-    '4': {  },
-    '5': {  },
   },
   "Lloyd": {
     '1': { Inf: { DamageMultiply: 0.04 }, Lan: { ChanceDamage: 0.09, DamageMultiply: 0.04 }, Mar: { DamageMultiply: 0.04 } },
@@ -320,13 +264,6 @@ export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByT
     '4': { Inf: { Lethality: 0.2, DamageMultiply: 0.12 }, Lan: { Lethality: 0.2, SkillDamageAdds: 0.16 }, Mar: { Lethality: 0.2, DamageMultiply: 0.12 } },
     '5': { Inf: { Lethality: 0.25, DamageMultiply: 0.15 }, Lan: { Lethality: 0.25, SkillDamageAdds: 0.2 }, Mar: { Lethality: 0.25, DamageMultiply: 0.15 } },
   },
-  "Patrick": {
-    '1': { Inf: { Attack: 0.05 }, Lan: { Attack: 0.05 }, Mar: { Attack: 0.05 } },
-    '2': { Inf: { Attack: 0.1 }, Lan: { Attack: 0.1 }, Mar: { Attack: 0.1 } },
-    '3': { Inf: { Attack: 0.15 }, Lan: { Attack: 0.15 }, Mar: { Attack: 0.15 } },
-    '4': { Inf: { Attack: 0.2 }, Lan: { Attack: 0.2 }, Mar: { Attack: 0.2 } },
-    '5': { Inf: { Attack: 0.25 }, Lan: { Attack: 0.25 }, Mar: { Attack: 0.25 } },
-  },
   "Philly": {
     '1': { Inf: { Attack: 0.03, SkillDamageAdds: 0.05 }, Lan: { Attack: 0.03, SkillDamageAdds: 0.05 }, Mar: { Attack: 0.03, SkillDamageAdds: 0.05 } },
     '2': { Inf: { Attack: 0.06, SkillDamageAdds: 0.1 }, Lan: { Attack: 0.06, SkillDamageAdds: 0.1 }, Mar: { Attack: 0.06, SkillDamageAdds: 0.1 } },
@@ -355,27 +292,6 @@ export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByT
     '4': { Inf: { Attack: 0.2, DamageTakenUp: 0.18 }, Lan: { Attack: 0.2, DamageTakenUp: 0.18 }, Mar: { Attack: 0.2, DamageTakenUp: 0.18, ChanceDamage: 0.48 } },
     '5': { Inf: { Attack: 0.25, DamageTakenUp: 0.225 }, Lan: { Attack: 0.25, DamageTakenUp: 0.225 }, Mar: { Attack: 0.25, DamageTakenUp: 0.225, ChanceDamage: 0.6 } },
   },
-  "Seo-Yoon": {
-    '1': { Inf: { Attack: 0.05 }, Lan: { Attack: 0.05 }, Mar: { Attack: 0.05 } },
-    '2': { Inf: { Attack: 0.1 }, Lan: { Attack: 0.1 }, Mar: { Attack: 0.1 } },
-    '3': { Inf: { Attack: 0.15 }, Lan: { Attack: 0.15 }, Mar: { Attack: 0.15 } },
-    '4': { Inf: { Attack: 0.2 }, Lan: { Attack: 0.2 }, Mar: { Attack: 0.2 } },
-    '5': { Inf: { Attack: 0.25 }, Lan: { Attack: 0.25 }, Mar: { Attack: 0.25 } },
-  },
-  "Sergey": {
-    '1': {  },
-    '2': {  },
-    '3': {  },
-    '4': {  },
-    '5': {  },
-  },
-  "Smith": {
-    '1': {  },
-    '2': {  },
-    '3': {  },
-    '4': {  },
-    '5': {  },
-  },
   "Sonya": {
     '1': { Inf: { DamageMultiply: 0.0452 }, Lan: { ChanceDamage: 0.181875, DamageMultiply: 0.04 }, Mar: { DamageMultiply: 0.0452 } },
     '2': { Inf: { DamageMultiply: 0.0908 }, Lan: { ChanceDamage: 0.36375, DamageMultiply: 0.25442 }, Mar: { DamageMultiply: 0.0908 } },
@@ -396,13 +312,6 @@ export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByT
     '3': { Inf: { DamageTakenUp: 0.009, ChanceDamage: 0.12 }, Lan: { DamageTakenUp: 0.009, ChanceDamage: 0.12 }, Mar: { DamageTakenUp: 0.009, ChanceDamage: 0.12 } },
     '4': { Inf: { DamageTakenUp: 0.012, ChanceDamage: 0.16 }, Lan: { DamageTakenUp: 0.012, ChanceDamage: 0.16 }, Mar: { DamageTakenUp: 0.012, ChanceDamage: 0.16 } },
     '5': { Inf: { DamageTakenUp: 0.015, ChanceDamage: 0.2 }, Lan: { DamageTakenUp: 0.015, ChanceDamage: 0.2 }, Mar: { DamageTakenUp: 0.015, ChanceDamage: 0.2 } },
-  },
-  "Wallis Bokan": {
-    '1': {  },
-    '2': {  },
-    '3': {  },
-    '4': {  },
-    '5': {  },
   },
   "Wayne": {
     '1': { Inf: { ChanceDamage: 0.09 }, Lan: { ChanceDamage: 0.09 }, Mar: { ChanceDamage: 0.09 } },
