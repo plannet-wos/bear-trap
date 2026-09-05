@@ -21,7 +21,23 @@ import { SaveCodeService } from '../../core/services/save-code.service';
 const STAR_OPTIONS = [0, 1, 2, 3, 4, 5];
 const WIDGET_OPTIONS = Array.from({ length: 11 }, (_, i) => i);
 const PET_LEVEL_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
-const HERO_CLASSES: HeroClass[] = ['Infantry', 'Lancer', 'Marksman'];
+
+/** Every generation present in the roster, ascending, for the "latest generation" picker. */
+const GENERATIONS = [...new Set(BEAR_TRAP_HEROES.map(h => h.gen))].sort((a, b) => a - b);
+const LATEST_GENERATION = GENERATIONS[GENERATIONS.length - 1];
+
+interface HeroRow {
+  name: string;
+  class: HeroClass;
+  gen: number;
+  stars: number;
+  widget: number;
+}
+
+interface GenerationGroup {
+  gen: number;
+  heroes: HeroRow[];
+}
 
 type TroopTypeKey = 'inf' | 'lanc' | 'mark';
 type BaseStatScopeKey = 'allTroops' | TroopTypeKey;
@@ -57,10 +73,10 @@ const BASE_STAT_SCOPES: { key: BaseStatScopeKey; label: string }[] = [
   styleUrl: './bear-trap.scss',
 })
 export class BearTrap {
-  readonly heroClasses = HERO_CLASSES;
   readonly starOptions = STAR_OPTIONS;
   readonly widgetOptions = WIDGET_OPTIONS;
   readonly petLevelOptions = PET_LEVEL_OPTIONS;
+  readonly generations = GENERATIONS;
   readonly troopTierKeys = TROOP_TIER_TABLE.map(r => r.key);
   readonly troopTypeScopes = TROOP_TYPE_SCOPES;
   readonly baseStatScopes = BASE_STAT_SCOPES;
@@ -70,17 +86,26 @@ export class BearTrap {
   readonly loadCodeText = signal('');
   readonly lastSavedCode = signal<string | null>(null);
 
-  readonly heroesByClass = computed(() => {
+  /** "I have up to this generation" — heroes past it are hidden from the roster
+   *  entirely (not just collapsed), since a player can't own them yet. */
+  readonly latestGeneration = signal<number>(LATEST_GENERATION);
+
+  readonly heroesByGeneration = computed<GenerationGroup[]>(() => {
+    const maxGen = this.latestGeneration();
     const levels = this.inputs().heroLevels;
     const byName = new Map(levels.map(h => [h.name, h]));
-    const groups: Record<HeroClass, { name: string; stars: number; widget: number }[]> = {
-      Infantry: [], Lancer: [], Marksman: [],
-    };
+    const groups = new Map<number, HeroRow[]>();
     for (const hero of BEAR_TRAP_HEROES) {
+      if (hero.gen > maxGen) continue;
       const level = byName.get(hero.name);
-      groups[hero.class].push({ name: hero.name, stars: level?.stars ?? 0, widget: level?.widget ?? 0 });
+      const row: HeroRow = { name: hero.name, class: hero.class, gen: hero.gen, stars: level?.stars ?? 0, widget: level?.widget ?? 0 };
+      const group = groups.get(hero.gen);
+      if (group) group.push(row);
+      else groups.set(hero.gen, [row]);
     }
-    return groups;
+    return [...groups.entries()]
+      .sort(([a], [b]) => b - a)
+      .map(([gen, heroes]) => ({ gen, heroes: heroes.sort((a, b) => a.name.localeCompare(b.name)) }));
   });
 
   readonly effectiveSquadSize = computed(() => this.calculator.effectiveSquadSize(this.inputs()));
@@ -90,6 +115,10 @@ export class BearTrap {
     private readonly saveCode: SaveCodeService,
     private readonly snackBar: MatSnackBar,
   ) {}
+
+  updateLatestGeneration(gen: number): void {
+    this.latestGeneration.set(gen);
+  }
 
   updateHeroLevel(name: string, field: 'stars' | 'widget', value: number): void {
     this.inputs.update(inputs => ({
