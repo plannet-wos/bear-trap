@@ -14,15 +14,29 @@
     <mat-card class="hero-roster">
       <mat-card-header><mat-card-title>Your heroes</mat-card-title></mat-card-header>
       <mat-card-content>
-        @for (cls of heroClasses; track cls) {
+        <mat-form-field appearance="outline">
+          <mat-label>Latest generation you have</mat-label>
+          <mat-select [value]="latestGeneration()" (selectionChange)="updateLatestGeneration($event.value)">
+            @for (g of generations; track g) {
+              <mat-option [value]="g">Generation {{ g }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <p class="hint">Only heroes up to this generation are shown below, newest first.</p>
+
+        @for (group of heroesByGeneration(); track group.gen) {
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
-              <mat-panel-title>{{ cls }}</mat-panel-title>
+              <mat-panel-title>Generation {{ group.gen }}</mat-panel-title>
             </mat-expansion-panel-header>
-            <table mat-table [dataSource]="heroesByClass()[cls]" class="hero-table">
+            <table mat-table [dataSource]="group.heroes" class="hero-table">
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Hero</th>
                 <td mat-cell *matCellDef="let hero">{{ hero.name }}</td>
+              </ng-container>
+              <ng-container matColumnDef="class">
+                <th mat-header-cell *matHeaderCellDef>Class</th>
+                <td mat-cell *matCellDef="let hero">{{ hero.class }}</td>
               </ng-container>
               <ng-container matColumnDef="stars">
                 <th mat-header-cell *matHeaderCellDef>Stars</th>
@@ -48,8 +62,8 @@
                   </mat-form-field>
                 </td>
               </ng-container>
-              <tr mat-header-row *matHeaderRowDef="['name', 'stars', 'widget']"></tr>
-              <tr mat-row *matRowDef="let row; columns: ['name', 'stars', 'widget'];"></tr>
+              <tr mat-header-row *matHeaderRowDef="['name', 'class', 'stars', 'widget']"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['name', 'class', 'stars', 'widget'];"></tr>
             </table>
           </mat-expansion-panel>
         }
