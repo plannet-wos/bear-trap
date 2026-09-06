@@ -3,34 +3,32 @@ import {
   doc,
   getDoc,
   getFirestore,
-  runTransaction,
   serverTimestamp,
+  setDoc,
   Firestore,
 } from 'firebase/firestore';
 
 import { BearTrapInputs } from '../models/bear-trap.model';
 
-/** One save-slot stored in Firestore at /bear_trap_saves/{code}. */
+/** One save-slot stored in Firestore at /bear_trap_saves/{playerId}. */
 export interface SaveCodePayload {
   /** Schema version — bump when the shape changes incompatibly. */
   v: number;
   inputs: BearTrapInputs;
 }
 
-export interface SaveCodeResult {
-  code: string;
-}
-
-/**
- * Alphabet used for save codes. Excludes visually-confusable chars (0/O,
- * 1/I/L) so a code can be read off a screen and typed without mistakes.
- * Same alphabet as battle-calculator's save-code service.
- */
-const CODE_ALPHABET = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
-const CODE_LENGTH = 4;
-const MAX_RETRIES = 8;
 const COLLECTION = 'bear_trap_saves';
 
+/** Whiteout Survival governor IDs are numeric; 5-12 digits covers every ID
+ *  seen in the wild with room to grow. Matches firestore.rules' own check —
+ *  see isValidBearTrapPlayerId() in plannet-wos. */
+const PLAYER_ID_PATTERN = /^\d{5,12}$/;
+
+/**
+ * Save/load keyed by the player's own governor ID rather than a generated
+ * share code — saving again just overwrites that player's existing slot, so
+ * there's nothing to remember beyond the ID they already have.
+ */
 @Injectable({ providedIn: 'root' })
 export class SaveCodeService {
   private _db: Firestore | null = null;
@@ -41,36 +39,20 @@ export class SaveCodeService {
     return this._db;
   }
 
-  /**
-   * Generates a fresh code, writes the payload via a transaction (so we can
-   * atomically refuse to overwrite an existing code), and retries on the rare
-   * collision. Throws if MAX_RETRIES collide in a row.
-   */
-  async save(inputs: BearTrapInputs): Promise<SaveCodeResult> {
+  /** Writes (or overwrites) this player's save slot. Throws if `playerId` isn't shaped like a real governor ID. */
+  async save(inputs: BearTrapInputs, playerId: string): Promise<void> {
+    const id = normalizePlayerId(playerId);
+    if (!id) throw new Error('Enter a valid player ID (numbers only).');
+    const ref = doc(this.db, COLLECTION, id);
     const data: SaveCodePayload = { v: 1, inputs };
-
-    for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-      const code = randomCode();
-      const ref = doc(this.db, COLLECTION, code);
-      const winner = await runTransaction(this.db, async tx => {
-        const snap = await tx.get(ref);
-        if (snap.exists()) return null; // collision — retry
-        tx.set(ref, { ...data, createdAt: serverTimestamp() });
-        return code;
-      });
-      if (winner) return { code: winner };
-    }
-    throw new Error('Save-code generation failed: too many collisions');
+    await setDoc(ref, { ...data, updatedAt: serverTimestamp() });
   }
 
-  /**
-   * Reads a save by code. Returns null if the code does not exist, or if the
-   * stored payload is from a future incompatible version.
-   */
-  async load(code: string): Promise<BearTrapInputs | null> {
-    const normalized = normalizeCode(code);
-    if (!normalized) return null;
-    const ref = doc(this.db, COLLECTION, normalized);
+  /** Reads a save by player ID. Returns null if there's no save for that ID, it's malformed, or from a future incompatible version. */
+  async load(playerId: string): Promise<BearTrapInputs | null> {
+    const id = normalizePlayerId(playerId);
+    if (!id) return null;
+    const ref = doc(this.db, COLLECTION, id);
     const snap = await getDoc(ref);
     if (!snap.exists()) return null;
     const raw = snap.data() as Partial<SaveCodePayload>;
@@ -79,27 +61,9 @@ export class SaveCodeService {
   }
 }
 
-/** Random 4-char code drawn from the Crockford-ish alphabet. */
-function randomCode(): string {
-  let out = '';
-  const buf = new Uint32Array(CODE_LENGTH);
-  crypto.getRandomValues(buf);
-  for (let i = 0; i < CODE_LENGTH; i++) {
-    out += CODE_ALPHABET[buf[i] % CODE_ALPHABET.length];
-  }
-  return out;
-}
-
-/**
- * Cleans user-typed input — uppercases, drops whitespace, validates length and
- * alphabet. Returns null if the input can't be a real code.
- */
-function normalizeCode(raw: string): string | null {
+/** Trims whitespace and validates the ID looks like a real governor ID. Returns null if it doesn't. */
+function normalizePlayerId(raw: string): string | null {
   if (!raw) return null;
-  const cleaned = raw.toUpperCase().replace(/\s+/g, '');
-  if (cleaned.length !== CODE_LENGTH) return null;
-  for (const ch of cleaned) {
-    if (!CODE_ALPHABET.includes(ch)) return null;
-  }
-  return cleaned;
+  const cleaned = raw.trim();
+  return PLAYER_ID_PATTERN.test(cleaned) ? cleaned : null;
 }

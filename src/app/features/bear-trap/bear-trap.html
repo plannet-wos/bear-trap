@@ -9,11 +9,13 @@
     </p>
     <div class="load-bar">
       <mat-form-field appearance="outline" class="tight-field">
-        <mat-label>Load code</mat-label>
-        <input matInput [value]="loadCodeText()" (input)="loadCodeText.set($any($event.target).value)" maxlength="4" />
+        <mat-label>Your player ID</mat-label>
+        <input matInput [value]="playerIdText()" (input)="playerIdText.set($any($event.target).value)" />
       </mat-form-field>
-      <button mat-stroked-button (click)="loadSetup()">Load</button>
+      <button mat-stroked-button (click)="loadSetup()">Load setup</button>
+      <button mat-stroked-button (click)="saveSetup()">Save setup</button>
     </div>
+    <p class="hint">Your setup is saved under your own governor ID — saving again overwrites your last save.</p>
   </header>
 
   <div class="layout">
@@ -186,13 +188,6 @@
 
         <div class="actions">
           <button mat-raised-button color="primary" (click)="calculate()">Calculate</button>
-        </div>
-
-        <div class="save-load">
-          <button mat-stroked-button (click)="saveSetup()">Save setup</button>
-          @if (lastSavedCode()) {
-            <span class="code-display">Code: <strong>{{ lastSavedCode() }}</strong></span>
-          }
         </div>
       </mat-card-content>
     </mat-card>

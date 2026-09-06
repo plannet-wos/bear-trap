@@ -63,6 +63,9 @@ const HELP_CONTENT: Record<'power' | 'gear', HelpDialogData> = {
 
 const PET_LEVEL_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
 
+/** Whiteout Survival governor IDs are numeric; mirrors save-code.service.ts's own check. */
+const PLAYER_ID_PATTERN = /^\d{5,12}$/;
+
 /** Every generation present in the roster, ascending, for the "latest generation" picker. */
 const GENERATIONS = [...new Set(BEAR_TRAP_HEROES.map(h => h.gen))].sort((a, b) => a - b);
 const LATEST_GENERATION = GENERATIONS[GENERATIONS.length - 1];
@@ -126,8 +129,8 @@ export class BearTrap {
 
   readonly inputs = signal<BearTrapInputs>(defaultBearTrapInputs(BEAR_TRAP_HEROES.map(h => h.name), LATEST_GENERATION));
   readonly results = signal<LineupResult[]>([]);
-  readonly loadCodeText = signal('');
-  readonly lastSavedCode = signal<string | null>(null);
+  /** Shared by Save and Load — the player's own governor ID doubles as their save slot. */
+  readonly playerIdText = signal('');
 
   readonly heroesByGeneration = computed<GenerationGroup[]>(() => {
     const maxGen = this.inputs().latestGeneration;
@@ -217,10 +220,14 @@ export class BearTrap {
   }
 
   async saveSetup(): Promise<void> {
+    const id = this.playerIdText().trim();
+    if (!PLAYER_ID_PATTERN.test(id)) {
+      this.snackBar.open('Enter your player ID (numbers only) first.', 'Dismiss', { duration: 6000 });
+      return;
+    }
     try {
-      const { code } = await this.saveCode.save(this.inputs());
-      this.lastSavedCode.set(code);
-      this.snackBar.open(`Saved — code ${code}`, 'Dismiss', { duration: 6000 });
+      await this.saveCode.save(this.inputs(), id);
+      this.snackBar.open(`Saved to ID ${id} — saving again will overwrite this.`, 'Dismiss', { duration: 6000 });
     } catch (err) {
       this.snackBar.open('Save failed — please try again.', 'Dismiss', { duration: 6000 });
       console.error(err);
@@ -228,13 +235,17 @@ export class BearTrap {
   }
 
   async loadSetup(): Promise<void> {
-    const code = this.loadCodeText();
-    const loaded = await this.saveCode.load(code);
-    if (!loaded) {
-      this.snackBar.open('Code not found.', 'Dismiss', { duration: 6000 });
+    const id = this.playerIdText().trim();
+    if (!PLAYER_ID_PATTERN.test(id)) {
+      this.snackBar.open('Enter your player ID (numbers only) first.', 'Dismiss', { duration: 6000 });
       return;
     }
-    // Older save codes predate latestGeneration — fall back so they don't hide every hero.
+    const loaded = await this.saveCode.load(id);
+    if (!loaded) {
+      this.snackBar.open('No saved setup found for that ID.', 'Dismiss', { duration: 6000 });
+      return;
+    }
+    // Older saves predate latestGeneration — fall back so they don't hide every hero.
     this.inputs.set({ ...loaded, latestGeneration: loaded.latestGeneration ?? LATEST_GENERATION });
     this.results.set([]);
     this.snackBar.open('Setup loaded.', 'Dismiss', { duration: 4000 });
