@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -51,8 +52,6 @@ const HELP_CONTENT: Record<'power' | 'gear', HelpDialogData> = {
   },
 };
 
-const STAR_OPTIONS = [0, 1, 2, 3, 4, 5];
-const WIDGET_OPTIONS = Array.from({ length: 11 }, (_, i) => i);
 const PET_LEVEL_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
 
 /** Every generation present in the roster, ascending, for the "latest generation" picker. */
@@ -99,6 +98,7 @@ const BASE_STAT_SCOPES: { key: BaseStatScopeKey; label: string }[] = [
     MatInputModule,
     MatSelectModule,
     MatSlideToggleModule,
+    MatSliderModule,
     MatSnackBarModule,
     MatTableModule,
     MatTooltipModule,
@@ -107,8 +107,6 @@ const BASE_STAT_SCOPES: { key: BaseStatScopeKey; label: string }[] = [
   styleUrl: './bear-trap.scss',
 })
 export class BearTrap {
-  readonly starOptions = STAR_OPTIONS;
-  readonly widgetOptions = WIDGET_OPTIONS;
   readonly petLevelOptions = PET_LEVEL_OPTIONS;
   readonly generations = GENERATIONS;
   readonly troopTierKeys = TROOP_TIER_TABLE.map(r => r.key);
