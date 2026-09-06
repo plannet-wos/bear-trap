@@ -110,7 +110,8 @@ const BASE_STAT_SCOPES: { key: BaseStatScopeKey; label: string }[] = [
 export class BearTrap {
   readonly petLevelOptions = PET_LEVEL_OPTIONS;
   readonly generations = GENERATIONS;
-  readonly troopTierKeys = TROOP_TIER_TABLE.map(r => r.key);
+  // Only T10/T11 are worth offering — nobody runs Bear Trap troops below that.
+  readonly troopTierKeys = TROOP_TIER_TABLE.map(r => r.key).filter(k => k.endsWith(' T10') || k.endsWith(' T11'));
   readonly troopTypeScopes = TROOP_TYPE_SCOPES;
   readonly baseStatScopes = BASE_STAT_SCOPES;
   readonly gearReadingKeys: ('equipped' | 'unequipped')[] = ['equipped', 'unequipped'];
