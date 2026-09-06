@@ -17,8 +17,9 @@ Part of the **[Plannet WOS](https://plannet-wos.web.app)** suite.
 2. **UI:** Angular Material + Angular CDK. No other UI libraries.
 3. **State management:** Angular signals only. No RxJS for component state.
 4. **All calculation is client-side.** No backend, no server calls for the calculator itself. The
-   only server-side dependency is Firestore for the save-code feature (read/write a 4-char code →
-   JSON blob of the user's inputs, see `core/services/save-code.service.ts`).
+   only server-side dependency is Firestore for the save/load feature — one doc per player, keyed
+   by their own governor ID (read/write a JSON blob of the user's inputs, see
+   `core/services/save-code.service.ts`).
 5. **Deployment:** Firebase Hosting, site name `bear-trap`. Firestore rules for the
    `bear_trap_saves` collection live in the `plannet-wos` repo (sole owner/deployer of the shared
    `tal-coordinator` project's `firestore.rules`) — this repo has no local copy and
@@ -49,7 +50,7 @@ src/app/
       squad-weights.ts            # Reference troop-composition weights used in scoring
     services/
       calculator.service.ts       # Scoring engine + combo search — see its header comments
-      save-code.service.ts        # Firestore-backed 4-char codes for share/reload
+      save-code.service.ts        # Firestore-backed save/load, keyed by the player's own governor ID
   shared/
     app-switcher/app-switcher.ts  # FAB linking back to Plannet WOS
 ```
