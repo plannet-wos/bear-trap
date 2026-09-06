@@ -7,6 +7,13 @@
       heroes and ranks them by score, with the optimal troop ratio for each.
       Joiners aren't modeled.
     </p>
+    <div class="load-bar">
+      <mat-form-field appearance="outline" class="tight-field">
+        <mat-label>Load code</mat-label>
+        <input matInput [value]="loadCodeText()" (input)="loadCodeText.set($any($event.target).value)" maxlength="4" />
+      </mat-form-field>
+      <button mat-stroked-button (click)="loadSetup()">Load</button>
+    </div>
   </header>
 
   <div class="layout">
@@ -25,7 +32,7 @@
         <p class="hint">Only heroes up to this generation are shown below, newest first.</p>
 
         @for (group of heroesByGeneration(); track group.gen) {
-          <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title>Generation {{ group.gen }}</mat-panel-title>
             </mat-expansion-panel-header>
@@ -186,11 +193,6 @@
           @if (lastSavedCode()) {
             <span class="code-display">Code: <strong>{{ lastSavedCode() }}</strong></span>
           }
-          <mat-form-field appearance="outline" class="tight-field">
-            <mat-label>Load code</mat-label>
-            <input matInput [value]="loadCodeText()" (input)="loadCodeText.set($any($event.target).value)" maxlength="4" />
-          </mat-form-field>
-          <button mat-stroked-button (click)="loadSetup()">Load</button>
         </div>
       </mat-card-content>
     </mat-card>
