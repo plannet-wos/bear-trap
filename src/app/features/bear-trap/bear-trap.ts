@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, HostListener, computed, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -143,6 +143,9 @@ export class BearTrap {
   readonly results = signal<LineupResult[]>([]);
   /** Shared by Save and Load — the player's own governor ID doubles as their save slot. */
   readonly playerIdText = signal('');
+  /** True once any input has changed since the last successful save/load —
+   *  drives the "are you sure you want to leave?" prompt below. */
+  readonly dirty = signal(false);
 
   readonly heroesByGeneration = computed<GenerationGroup[]>(() => {
     const maxGen = this.inputs().latestGeneration;
@@ -175,30 +178,49 @@ export class BearTrap {
     this.dialog.open(HelpDialog, { data: HELP_CONTENT[kind], autoFocus: false });
   }
 
+  /** Routes every user-driven edit through here so `dirty` always reflects
+   *  "something's changed since the last save/load" — see the beforeunload
+   *  guard below. */
+  private updateInputs(fn: (inputs: BearTrapInputs) => BearTrapInputs): void {
+    this.dirty.set(true);
+    this.inputs.update(fn);
+  }
+
+  /** Warns before closing the tab/navigating away if there's anything unsaved —
+   *  there's a lot to re-enter by hand, so losing it silently would be nasty.
+   *  Browsers show their own generic "leave site?" wording; the message set
+   *  here is ignored everywhere except very old ones. */
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload(event: BeforeUnloadEvent): void {
+    if (!this.dirty()) return;
+    event.preventDefault();
+    event.returnValue = true;
+  }
+
   updateLatestGeneration(gen: number): void {
-    this.inputs.update(inputs => ({ ...inputs, latestGeneration: gen }));
+    this.updateInputs(inputs => ({ ...inputs, latestGeneration: gen }));
   }
 
   updateHeroLevel(name: string, field: 'stars' | 'widget', value: number): void {
-    this.inputs.update(inputs => ({
+    this.updateInputs(inputs => ({
       ...inputs,
       heroLevels: inputs.heroLevels.map(h => h.name === name ? { ...h, [field]: value } : h),
     }));
   }
 
   updateSquadSize(value: number): void {
-    this.inputs.update(inputs => ({ ...inputs, squadSize: value }));
+    this.updateInputs(inputs => ({ ...inputs, squadSize: value }));
   }
 
   updateBaseStat(scope: 'allTroops' | 'inf' | 'lanc' | 'mark', field: 'lethality' | 'attack', value: number): void {
-    this.inputs.update(inputs => ({
+    this.updateInputs(inputs => ({
       ...inputs,
       baseStats: { ...inputs.baseStats, [scope]: { ...inputs.baseStats[scope], [field]: value } },
     }));
   }
 
   updateGear(type: 'inf' | 'lanc' | 'mark', which: 'equipped' | 'unequipped', field: 'lethality' | 'attack', value: number): void {
-    this.inputs.update(inputs => ({
+    this.updateInputs(inputs => ({
       ...inputs,
       gear: {
         ...inputs.gear,
@@ -220,11 +242,11 @@ export class BearTrap {
   }
 
   updateTroopTier(type: 'inf' | 'lanc' | 'mark', key: string): void {
-    this.inputs.update(inputs => ({ ...inputs, troopTiers: { ...inputs.troopTiers, [type]: key } }));
+    this.updateInputs(inputs => ({ ...inputs, troopTiers: { ...inputs.troopTiers, [type]: key } }));
   }
 
   updatePet(field: keyof BearTrapInputs['pets'], value: boolean | number): void {
-    this.inputs.update(inputs => ({ ...inputs, pets: { ...inputs.pets, [field]: value } }));
+    this.updateInputs(inputs => ({ ...inputs, pets: { ...inputs.pets, [field]: value } }));
   }
 
   calculate(): void {
@@ -239,6 +261,7 @@ export class BearTrap {
     }
     try {
       await this.saveCode.save(this.inputs(), id);
+      this.dirty.set(false);
       this.snackBar.open(`Saved to ID ${id} — saving again will overwrite this.`, 'Dismiss', { duration: 6000 });
     } catch (err) {
       this.snackBar.open('Save failed — please try again.', 'Dismiss', { duration: 6000 });
@@ -262,6 +285,7 @@ export class BearTrap {
     // Older saves predate latestGeneration — fall back so they don't hide every hero.
     this.inputs.set({ ...loaded, latestGeneration: loaded.latestGeneration ?? LATEST_GENERATION });
     this.results.set([]);
+    this.dirty.set(false);
     this.snackBar.open('Setup loaded.', 'Dismiss', { duration: 4000 });
   }
 
