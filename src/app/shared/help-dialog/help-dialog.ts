@@ -8,12 +8,17 @@ export interface HelpImage {
   alt: string;
 }
 
+export interface HelpStep {
+  text: string;
+  /** Screenshot shown directly under this step, when it illustrates it best —
+   *  e.g. "tap your power number" gets the screenshot of where that is, right
+   *  there, rather than every image being dumped at the end out of context. */
+  image?: HelpImage;
+}
+
 export interface HelpDialogData {
   title: string;
-  /** Short numbered walkthrough — each entry is one step. */
-  steps: string[];
-  /** Screenshots illustrating the steps above, shown below them in order. */
-  images?: HelpImage[];
+  steps: HelpStep[];
 }
 
 /** Small "how do I find this?" popup, opened from an (i) icon next to an input
@@ -27,22 +32,20 @@ export interface HelpDialogData {
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>
       <ol>
-        @for (step of data.steps; track step) {
-          <li>{{ step }}</li>
+        @for (step of data.steps; track step.text) {
+          <li>
+            {{ step.text }}
+            @if (step.image; as image) {
+              <figure class="help-figure">
+                <img [src]="image.src" [alt]="image.alt" />
+                @if (image.caption) {
+                  <figcaption>{{ image.caption }}</figcaption>
+                }
+              </figure>
+            }
+          </li>
         }
       </ol>
-      @for (image of data.images; track image.src) {
-        <figure class="help-figure">
-          <img [src]="image.src" [alt]="image.alt" />
-          @if (image.caption) {
-            <figcaption>{{ image.caption }}</figcaption>
-          }
-        </figure>
-      } @empty {
-        @if (data.images !== undefined) {
-          <p class="help-placeholder">Screenshots coming soon.</p>
-        }
-      }
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Close</button>
@@ -51,11 +54,10 @@ export interface HelpDialogData {
   styles: [`
     :host { display: block; max-width: 480px; }
     ol { margin: 0; padding-left: 20px; }
-    li { margin-bottom: 8px; }
-    .help-figure { margin: 16px 0 0; }
+    li { margin-bottom: 12px; }
+    .help-figure { margin: 8px 0 0; }
     .help-figure img { max-width: 100%; border-radius: 8px; display: block; }
     .help-figure figcaption { font-size: 0.8rem; color: var(--mat-sys-on-surface-variant); margin-top: 4px; }
-    .help-placeholder { color: var(--mat-sys-on-surface-variant); font-style: italic; }
   `],
 })
 export class HelpDialog {
