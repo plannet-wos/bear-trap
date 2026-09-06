@@ -23,7 +23,7 @@
       <mat-card-content>
         <mat-form-field appearance="outline">
           <mat-label>Latest generation you have</mat-label>
-          <mat-select [value]="latestGeneration()" (selectionChange)="updateLatestGeneration($event.value)">
+          <mat-select [value]="inputs().latestGeneration" (selectionChange)="updateLatestGeneration($event.value)">
             @for (g of generations; track g) {
               <mat-option [value]="g">Generation {{ g }}</mat-option>
             }

@@ -73,13 +73,17 @@ export interface BearTrapInputs {
   gear: GearBonus;
   troopTiers: TroopTierSelection;
   pets: PetSelection;
+  /** "I have up to this generation" — heroes past it are hidden from the
+   *  roster entirely, since a player can't own them yet. Saved/loaded along
+   *  with everything else so a save code re-opens showing the same heroes. */
+  latestGeneration: number;
   /** Every hero the user owns, with their current star/widget level. Heroes at
    *  0 stars are still listed (so the UI can show them) but contribute no
    *  skill/personal bonus and are excluded from combo search. */
   heroLevels: HeroLevel[];
 }
 
-export function defaultBearTrapInputs(heroNames: string[]): BearTrapInputs {
+export function defaultBearTrapInputs(heroNames: string[], latestGeneration: number): BearTrapInputs {
   const zero = (): BaseStat => ({ lethality: 0, attack: 0 });
   const zeroGear = (): GearReading => ({ equipped: zero(), unequipped: zero() });
   return {
@@ -92,6 +96,7 @@ export function defaultBearTrapInputs(heroNames: string[]): BearTrapInputs {
       snowApeActive: false, snowApeLevel: 1,
       sabreToothActive: false, sabreToothLevel: 1,
     },
+    latestGeneration,
     heroLevels: heroNames.map(name => ({ name, stars: 0, widget: 0 })),
   };
 }

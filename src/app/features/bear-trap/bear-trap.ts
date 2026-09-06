@@ -124,17 +124,13 @@ export class BearTrap {
   readonly baseStatScopes = BASE_STAT_SCOPES;
   readonly gearReadingKeys: ('equipped' | 'unequipped')[] = ['unequipped', 'equipped'];
 
-  readonly inputs = signal<BearTrapInputs>(defaultBearTrapInputs(BEAR_TRAP_HEROES.map(h => h.name)));
+  readonly inputs = signal<BearTrapInputs>(defaultBearTrapInputs(BEAR_TRAP_HEROES.map(h => h.name), LATEST_GENERATION));
   readonly results = signal<LineupResult[]>([]);
   readonly loadCodeText = signal('');
   readonly lastSavedCode = signal<string | null>(null);
 
-  /** "I have up to this generation" — heroes past it are hidden from the roster
-   *  entirely (not just collapsed), since a player can't own them yet. */
-  readonly latestGeneration = signal<number>(LATEST_GENERATION);
-
   readonly heroesByGeneration = computed<GenerationGroup[]>(() => {
-    const maxGen = this.latestGeneration();
+    const maxGen = this.inputs().latestGeneration;
     const levels = this.inputs().heroLevels;
     const byName = new Map(levels.map(h => [h.name, h]));
     const groups = new Map<number, HeroRow[]>();
@@ -165,7 +161,7 @@ export class BearTrap {
   }
 
   updateLatestGeneration(gen: number): void {
-    this.latestGeneration.set(gen);
+    this.inputs.update(inputs => ({ ...inputs, latestGeneration: gen }));
   }
 
   updateHeroLevel(name: string, field: 'stars' | 'widget', value: number): void {
@@ -238,7 +234,8 @@ export class BearTrap {
       this.snackBar.open('Code not found.', 'Dismiss', { duration: 6000 });
       return;
     }
-    this.inputs.set(loaded);
+    // Older save codes predate latestGeneration — fall back so they don't hide every hero.
+    this.inputs.set({ ...loaded, latestGeneration: loaded.latestGeneration ?? LATEST_GENERATION });
     this.results.set([]);
     this.snackBar.open('Setup loaded.', 'Dismiss', { duration: 4000 });
   }
