@@ -83,13 +83,15 @@
               <div class="stat-row">
                 <mat-form-field appearance="outline" class="tight-field">
                   <mat-label>Lethality</mat-label>
-                  <input matInput type="number" step="0.0001" [value]="baseStatValue(scope.key, 'lethality')"
+                  <input matInput type="number" step="0.01" [value]="baseStatValue(scope.key, 'lethality')"
                          (change)="updateBaseStat(scope.key, 'lethality', $any($event.target).valueAsNumber)" />
+                  <span matTextSuffix>%</span>
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="tight-field">
                   <mat-label>Attack</mat-label>
-                  <input matInput type="number" step="0.0001" [value]="baseStatValue(scope.key, 'attack')"
+                  <input matInput type="number" step="0.01" [value]="baseStatValue(scope.key, 'attack')"
                          (change)="updateBaseStat(scope.key, 'attack', $any($event.target).valueAsNumber)" />
+                  <span matTextSuffix>%</span>
                 </mat-form-field>
               </div>
             </div>
@@ -113,13 +115,15 @@
                 <div class="stat-row">
                   <mat-form-field appearance="outline" class="tight-field">
                     <mat-label>Lethality</mat-label>
-                    <input matInput type="number" step="0.0001" [value]="gearValue(type.key, which, 'lethality')"
+                    <input matInput type="number" step="0.01" [value]="gearValue(type.key, which, 'lethality')"
                            (change)="updateGear(type.key, which, 'lethality', $any($event.target).valueAsNumber)" />
+                    <span matTextSuffix>%</span>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="tight-field">
                     <mat-label>Attack</mat-label>
-                    <input matInput type="number" step="0.0001" [value]="gearValue(type.key, which, 'attack')"
+                    <input matInput type="number" step="0.01" [value]="gearValue(type.key, which, 'attack')"
                            (change)="updateGear(type.key, which, 'attack', $any($event.target).valueAsNumber)" />
+                    <span matTextSuffix>%</span>
                   </mat-form-field>
                 </div>
               </div>

@@ -47,19 +47,24 @@ function heroByName(name: string): BearTrapHero | undefined {
   return BEAR_TRAP_HEROES.find(h => h.name === name);
 }
 
+/** Sums the per-type and all-troops readings and converts from the
+ *  as-displayed percentage (482.39 for "482.39%") to the fraction the rest of
+ *  the formula works in (4.8239) — the one and only place that conversion
+ *  happens, so BaseStat/GearReading inputs always match what the game shows. */
 function baseStatFor(type: TroopType, inputs: BearTrapInputs): BaseStat {
   const perType = type === 'Inf' ? inputs.baseStats.inf : type === 'Lan' ? inputs.baseStats.lanc : inputs.baseStats.mark;
   const all = inputs.baseStats.allTroops;
-  return { lethality: perType.lethality + all.lethality, attack: perType.attack + all.attack };
+  return { lethality: (perType.lethality + all.lethality) / 100, attack: (perType.attack + all.attack) / 100 };
 }
 
-/** The delta the calculator actually needs — equipped minus unequipped — from
- *  the two raw readings the user enters (see GearReading's doc comment). */
+/** The delta the calculator actually needs — equipped minus unequipped,
+ *  converted from percentage to fraction — from the two raw readings the
+ *  user enters exactly as shown (see GearReading's doc comment). */
 function gearFor(type: TroopType, inputs: BearTrapInputs): BaseStat {
   const reading = type === 'Inf' ? inputs.gear.inf : type === 'Lan' ? inputs.gear.lanc : inputs.gear.mark;
   return {
-    lethality: reading.equipped.lethality - reading.unequipped.lethality,
-    attack: reading.equipped.attack - reading.unequipped.attack,
+    lethality: (reading.equipped.lethality - reading.unequipped.lethality) / 100,
+    attack: (reading.equipped.attack - reading.unequipped.attack) / 100,
   };
 }
 

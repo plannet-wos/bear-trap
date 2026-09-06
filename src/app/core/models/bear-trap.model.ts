@@ -14,7 +14,13 @@ export interface HeroLevel {
   widget: number; // 0–10
 }
 
-/** Per-troop-type base stats read off the in-game power screen (account-wide, no heroes). */
+/**
+ * Per-troop-type base stats read off the in-game power screen (account-wide,
+ * no heroes). Values are the raw percentage the game shows, typed exactly as
+ * seen — e.g. a bonus displayed as "482.39%" is entered as 482.39, not 4.8239.
+ * The calculator divides by 100 wherever it uses these (see
+ * calculator.service.ts's baseStatFor()) — never ask the user to do that math.
+ */
 export interface BaseStat {
   lethality: number;
   attack: number;
@@ -27,10 +33,14 @@ export interface BaseStats {
   mark: BaseStat;
 }
 
-/** Lethality/Attack read off the gear comparison screen with a troop type's full
- *  gear set equipped, and again with it removed — the app computes the delta
- *  the calculator actually needs (see calculator.service.ts's gearFor()),
- *  rather than asking the user to subtract it themselves. */
+/**
+ * Lethality/Attack read off the gear comparison screen with a troop type's
+ * full gear set equipped, and again with it removed — the app computes both
+ * the delta and the percent-to-fraction conversion the calculator actually
+ * needs (see calculator.service.ts's gearFor()), rather than asking the user
+ * to do either. Values are the raw percentage as shown on screen (e.g. 482.39
+ * for "482.39%"), same as BaseStat above.
+ */
 export interface GearReading {
   equipped: BaseStat;
   unequipped: BaseStat;
