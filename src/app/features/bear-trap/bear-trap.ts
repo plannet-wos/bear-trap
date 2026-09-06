@@ -114,7 +114,7 @@ export class BearTrap {
   readonly troopTierKeys = TROOP_TIER_TABLE.map(r => r.key).filter(k => k.endsWith(' T10') || k.endsWith(' T11'));
   readonly troopTypeScopes = TROOP_TYPE_SCOPES;
   readonly baseStatScopes = BASE_STAT_SCOPES;
-  readonly gearReadingKeys: ('equipped' | 'unequipped')[] = ['equipped', 'unequipped'];
+  readonly gearReadingKeys: ('equipped' | 'unequipped')[] = ['unequipped', 'equipped'];
 
   readonly inputs = signal<BearTrapInputs>(defaultBearTrapInputs(BEAR_TRAP_HEROES.map(h => h.name)));
   readonly results = signal<LineupResult[]>([]);
