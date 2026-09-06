@@ -8,7 +8,7 @@ import {
   TroopType,
 } from '../models/bear-trap.model';
 import { BEAR_TRAP_HEROES, BearTrapHero } from '../data/heroes';
-import { WIDGET_SKILL_EFFECTS, SkillMetric } from '../data/widget-skill-effects';
+import { HERO_SKILL_EFFECTS, SkillMetric } from '../data/hero-skill-effects';
 import { ATTACK_BY_STAR } from '../data/attack-by-star';
 import { GEN_LETHALITY_COEFF } from '../data/gen-lethality-coeff';
 import { TROOP_TIER_TABLE } from '../data/troop-tier-table';
@@ -17,18 +17,24 @@ import { SQUAD_WEIGHTS } from '../data/squad-weights';
 
 const TROOP_TYPES: TroopType[] = ['Inf', 'Lan', 'Mar'];
 
-/** A hero's skill level (1-5) used to look up WIDGET_SKILL_EFFECTS, derived from
- *  star count. 0 stars -> level 0 -> no exclusive-skill bonus at all (matches
- *  the spreadsheet's "Assumed skill level" column: MID(star,1,1)+1, capped 5). */
+/** A hero's skill level (1-5) used to look up HERO_SKILL_EFFECTS, derived from
+ *  star count: 0 stars already sits at level 1 (Skill 1 unlocks immediately on
+ *  recruitment), rising one level per star, capped at 5 — reached already at 4
+ *  stars, with 5 stars giving the same level 5. Exactly the spreadsheet's
+ *  "Assumed skill level" column: MID(star,1,1)+1, capped 5. (In this app a
+ *  hero needs >=1 star to be considered "owned" and enter the lineup search at
+ *  all — see findBestLineups() — so level 1 in practice only ever applies to a
+ *  1-star hero, even though the underlying formula would also give it to 0.) */
 function skillLevel(stars: number): number {
-  if (stars <= 0) return 0;
   return Math.min(Math.floor(stars) + 1, 5);
 }
 
-function widgetEffect(hero: HeroLevel, type: TroopType, metric: SkillMetric): number {
+/** A hero's three native skills combined, at their current level, for one
+ *  troop type/metric — see hero-skill-effects.ts's header for what "combined"
+ *  means here. */
+function heroSkillEffect(hero: HeroLevel, type: TroopType, metric: SkillMetric): number {
   const level = skillLevel(hero.stars);
-  if (level === 0) return 0;
-  return WIDGET_SKILL_EFFECTS[hero.name]?.[String(level)]?.[type]?.[metric] ?? 0;
+  return HERO_SKILL_EFFECTS[hero.name]?.[String(level)]?.[type]?.[metric] ?? 0;
 }
 
 /** Widget-level bracket used by the "rally leader" flat Lethality/Attack bonus:
@@ -107,12 +113,12 @@ export class CalculatorService {
     return lethFactor * atkFactor;
   }
 
-  /** Combined multiplicative bonus from all three heroes' exclusive skills on
+  /** Combined multiplicative bonus from all three heroes' native skills on
    *  troop-type `type`'s effective damage. Mirrors Bear model's Z:AH factors. */
   private skillCoefficient(heroes: HeroLevel[], type: TroopType): number {
     const sum = (metric: SkillMetric) =>
-      1 + heroes.reduce((s, h) => s + widgetEffect(h, type, metric), 0);
-    const productMultiply = heroes.reduce((p, h) => p * (1 + widgetEffect(h, type, 'DamageMultiply')), 1);
+      1 + heroes.reduce((s, h) => s + heroSkillEffect(h, type, metric), 0);
+    const productMultiply = heroes.reduce((p, h) => p * (1 + heroSkillEffect(h, type, 'DamageMultiply')), 1);
 
     const factorLeth = sum('Lethality');
     const factorAtk = sum('Attack');
