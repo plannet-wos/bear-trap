@@ -25,7 +25,19 @@ import { HelpDialog, HelpDialogData } from '../../shared/help-dialog/help-dialog
 /** Content for the two (i) help popups — see openHelp(). Each step can carry
  *  a screenshot shown right under it, so the picture sits next to the exact
  *  instruction it illustrates rather than all being dumped at the end. */
-const HELP_CONTENT: Record<'power' | 'gear', HelpDialogData> = {
+const HELP_CONTENT: Record<'power' | 'gear' | 'squadSize', HelpDialogData> = {
+  squadSize: {
+    title: 'Where do I find my squad size?',
+    steps: [
+      {
+        text: 'Go to the Wilderness and tap "Occupy" on an empty square, with 3 level-80 heroes in your squad.',
+      },
+      {
+        text: 'On the Deploy screen, check the number top-left (next to the person icon) — that\'s your base squad size, before any pet bonus.',
+        image: { src: 'help/squad-size.jpg', alt: 'Wilderness Deploy screen with the squad size number top-left highlighted', caption: 'Your squad size' },
+      },
+    ],
+  },
   power: {
     title: 'Where do I find these numbers?',
     steps: [
@@ -159,7 +171,7 @@ export class BearTrap {
     private readonly dialog: MatDialog,
   ) {}
 
-  openHelp(kind: 'power' | 'gear'): void {
+  openHelp(kind: 'power' | 'gear' | 'squadSize'): void {
     this.dialog.open(HelpDialog, { data: HELP_CONTENT[kind], autoFocus: false });
   }
 
