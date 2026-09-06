@@ -35,7 +35,7 @@ describe('CalculatorService', () => {
   }
 
   function baseInputs(): BearTrapInputs {
-    const inputs = defaultBearTrapInputs(BEAR_TRAP_HEROES.map(h => h.name));
+    const inputs = defaultBearTrapInputs(BEAR_TRAP_HEROES.map(h => h.name), Math.max(...BEAR_TRAP_HEROES.map(h => h.gen)));
     inputs.squadSize = 100000;
     inputs.troopTiers = { inf: 'FC0 T1', lanc: 'FC0 T1', mark: 'FC0 T1' };
     return inputs;
