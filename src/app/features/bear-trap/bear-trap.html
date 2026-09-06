@@ -74,11 +74,17 @@
     <mat-card class="stats-panel">
       <mat-card-header><mat-card-title>Your stats</mat-card-title></mat-card-header>
       <mat-card-content>
-        <mat-form-field appearance="outline">
-          <mat-label>Squad size (before pet bonus)</mat-label>
-          <input matInput type="number" [value]="inputs().squadSize"
-                 (change)="updateSquadSize($any($event.target).valueAsNumber)" />
-        </mat-form-field>
+        <div class="field-with-help">
+          <mat-form-field appearance="outline">
+            <mat-label>Squad size (before pet bonus)</mat-label>
+            <input matInput type="number" [value]="inputs().squadSize"
+                   (change)="updateSquadSize($any($event.target).valueAsNumber)" />
+          </mat-form-field>
+          <button mat-icon-button class="help-icon" type="button" matTooltip="Where do I find this?"
+                  (click)="openHelp('squadSize')" aria-label="Help: where do I find my squad size?">
+            <mat-icon>help_outline</mat-icon>
+          </button>
+        </div>
         <p class="hint">Effective squad size: {{ effectiveSquadSize() | number }}</p>
 
         <h3>
