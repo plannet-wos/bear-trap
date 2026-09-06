@@ -29,42 +29,30 @@
             <mat-expansion-panel-header>
               <mat-panel-title>Generation {{ group.gen }}</mat-panel-title>
             </mat-expansion-panel-header>
-            <table mat-table [dataSource]="group.heroes" class="hero-table">
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Hero</th>
-                <td mat-cell *matCellDef="let hero">{{ hero.name }}</td>
-              </ng-container>
-              <ng-container matColumnDef="class">
-                <th mat-header-cell *matHeaderCellDef>Class</th>
-                <td mat-cell *matCellDef="let hero">{{ hero.class }}</td>
-              </ng-container>
-              <ng-container matColumnDef="stars">
-                <th mat-header-cell *matHeaderCellDef>Stars</th>
-                <td mat-cell *matCellDef="let hero">
-                  <mat-form-field appearance="outline" class="tight-field">
-                    <mat-select [value]="hero.stars" (selectionChange)="updateHeroLevel(hero.name, 'stars', $event.value)">
-                      @for (s of starOptions; track s) {
-                        <mat-option [value]="s">{{ s }}★</mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="widget">
-                <th mat-header-cell *matHeaderCellDef>Widget</th>
-                <td mat-cell *matCellDef="let hero">
-                  <mat-form-field appearance="outline" class="tight-field">
-                    <mat-select [value]="hero.widget" (selectionChange)="updateHeroLevel(hero.name, 'widget', $event.value)">
-                      @for (w of widgetOptions; track w) {
-                        <mat-option [value]="w">{{ w }}</mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-                </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="['name', 'class', 'stars', 'widget']"></tr>
-              <tr mat-row *matRowDef="let row; columns: ['name', 'class', 'stars', 'widget'];"></tr>
-            </table>
+            @for (hero of group.heroes; track hero.name) {
+              <div class="hero-row">
+                <div class="hero-row-header">
+                  <span class="hero-name">{{ hero.name }}</span>
+                  <span class="hero-class">{{ hero.class }}</span>
+                </div>
+                <div class="hero-row-sliders">
+                  <div class="slider-field">
+                    <label>Stars: {{ hero.stars }}★</label>
+                    <mat-slider min="0" max="5" step="1" discrete>
+                      <input matSliderThumb [value]="hero.stars"
+                             (valueChange)="updateHeroLevel(hero.name, 'stars', $event)" />
+                    </mat-slider>
+                  </div>
+                  <div class="slider-field">
+                    <label>Widget: {{ hero.widget }}</label>
+                    <mat-slider min="0" max="10" step="1" discrete>
+                      <input matSliderThumb [value]="hero.widget"
+                             (valueChange)="updateHeroLevel(hero.name, 'widget', $event)" />
+                    </mat-slider>
+                  </div>
+                </div>
+              </div>
+            }
           </mat-expansion-panel>
         }
       </mat-card-content>
@@ -90,18 +78,20 @@
         </h3>
         <div class="stat-grid">
           @for (scope of baseStatScopes; track scope.key) {
-            <div class="stat-row">
+            <div class="stat-block">
               <span class="stat-label">{{ scope.label }}</span>
-              <mat-form-field appearance="outline" class="tight-field">
-                <mat-label>Lethality</mat-label>
-                <input matInput type="number" step="0.0001" [value]="baseStatValue(scope.key, 'lethality')"
-                       (change)="updateBaseStat(scope.key, 'lethality', $any($event.target).valueAsNumber)" />
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="tight-field">
-                <mat-label>Attack</mat-label>
-                <input matInput type="number" step="0.0001" [value]="baseStatValue(scope.key, 'attack')"
-                       (change)="updateBaseStat(scope.key, 'attack', $any($event.target).valueAsNumber)" />
-              </mat-form-field>
+              <div class="stat-row">
+                <mat-form-field appearance="outline" class="tight-field">
+                  <mat-label>Lethality</mat-label>
+                  <input matInput type="number" step="0.0001" [value]="baseStatValue(scope.key, 'lethality')"
+                         (change)="updateBaseStat(scope.key, 'lethality', $any($event.target).valueAsNumber)" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="tight-field">
+                  <mat-label>Attack</mat-label>
+                  <input matInput type="number" step="0.0001" [value]="baseStatValue(scope.key, 'attack')"
+                         (change)="updateBaseStat(scope.key, 'attack', $any($event.target).valueAsNumber)" />
+                </mat-form-field>
+              </div>
             </div>
           }
         </div>
@@ -118,18 +108,20 @@
           <div class="gear-group">
             <span class="stat-label">{{ type.label }}</span>
             @for (which of gearReadingKeys; track which) {
-              <div class="stat-row">
+              <div class="stat-block">
                 <span class="gear-which-label">{{ which === 'equipped' ? 'Equipped' : 'Unequipped' }}</span>
-                <mat-form-field appearance="outline" class="tight-field">
-                  <mat-label>Lethality</mat-label>
-                  <input matInput type="number" step="0.0001" [value]="gearValue(type.key, which, 'lethality')"
-                         (change)="updateGear(type.key, which, 'lethality', $any($event.target).valueAsNumber)" />
-                </mat-form-field>
-                <mat-form-field appearance="outline" class="tight-field">
-                  <mat-label>Attack</mat-label>
-                  <input matInput type="number" step="0.0001" [value]="gearValue(type.key, which, 'attack')"
-                         (change)="updateGear(type.key, which, 'attack', $any($event.target).valueAsNumber)" />
-                </mat-form-field>
+                <div class="stat-row">
+                  <mat-form-field appearance="outline" class="tight-field">
+                    <mat-label>Lethality</mat-label>
+                    <input matInput type="number" step="0.0001" [value]="gearValue(type.key, which, 'lethality')"
+                           (change)="updateGear(type.key, which, 'lethality', $any($event.target).valueAsNumber)" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="tight-field">
+                    <mat-label>Attack</mat-label>
+                    <input matInput type="number" step="0.0001" [value]="gearValue(type.key, which, 'attack')"
+                           (change)="updateGear(type.key, which, 'attack', $any($event.target).valueAsNumber)" />
+                  </mat-form-field>
+                </div>
               </div>
             }
           </div>
@@ -204,6 +196,7 @@
     <mat-card class="results">
       <mat-card-header><mat-card-title>Best lineups</mat-card-title></mat-card-header>
       <mat-card-content>
+        <div class="table-scroll">
         <table mat-table [dataSource]="results()" class="results-table">
           <ng-container matColumnDef="rank">
             <th mat-header-cell *matHeaderCellDef>#</th>
@@ -236,6 +229,7 @@
           <tr mat-header-row *matHeaderRowDef="['rank', 'inf', 'lanc', 'mark', 'score', 'ratio', 'troops']"></tr>
           <tr mat-row *matRowDef="let row; columns: ['rank', 'inf', 'lanc', 'mark', 'score', 'ratio', 'troops'];"></tr>
         </table>
+        </div>
       </mat-card-content>
     </mat-card>
   }
