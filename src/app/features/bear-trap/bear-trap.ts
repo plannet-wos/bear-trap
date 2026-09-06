@@ -235,14 +235,16 @@ export class BearTrap {
   }
 
   async loadSetup(): Promise<void> {
-    const id = this.playerIdText().trim();
-    if (!PLAYER_ID_PATTERN.test(id)) {
-      this.snackBar.open('Enter your player ID (numbers only) first.', 'Dismiss', { duration: 6000 });
+    const key = this.playerIdText().trim();
+    if (!key) {
+      this.snackBar.open('Enter your player ID first.', 'Dismiss', { duration: 6000 });
       return;
     }
-    const loaded = await this.saveCode.load(id);
+    // Accepts either a player ID (the current save format) or an old-style
+    // 4-char share code (from before the switch) — see SaveCodeService.load().
+    const loaded = await this.saveCode.load(key);
     if (!loaded) {
-      this.snackBar.open('No saved setup found for that ID.', 'Dismiss', { duration: 6000 });
+      this.snackBar.open('No saved setup found for that ID or code.', 'Dismiss', { duration: 6000 });
       return;
     }
     // Older saves predate latestGeneration — fall back so they don't hide every hero.
