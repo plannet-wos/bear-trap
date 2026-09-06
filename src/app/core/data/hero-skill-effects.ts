@@ -1,9 +1,18 @@
-// Each hero's exclusive/widget skill effect on troop-type combat stats, by
-// skill level (1-5, derived from star count: level = min(stars+1, 5), 0 stars =
-// no entry = no bonus). This is the dominant factor in a hero's Bear Trap score.
+// Each hero's three native skills, all unlocked/leveled together purely by
+// star count (there is no independent per-skill leveling) — combined into one
+// per-troop-type effect per level. This is the dominant factor in a hero's
+// Bear Trap score.
 //
-// Source: 'Skill stats backend' sheet, 4th column-group (the widget-exclusive
-// skill), across its 5 level row-blocks. Metrics match Bear model's Z:AH factors:
+// Skill level = min(floor(star) + 1, 5) — 0 stars already has Skill 1 active
+// at level 1, rising one level per star, capped at level 5 (reached at 4
+// stars already; 5 stars gives the same level 5, no further increase).
+// Matches the source spreadsheet's "Assumed skill level" column exactly
+// (MID(star,1,1)+1, capped 5).
+//
+// Source: 'Skill stats backend' sheet's "Combined rally caller damage" block
+// (columns CQ onward) — the sum of that sheet's three separate Skill 1/2/3
+// column-groups for the same hero and level, not any single one of them.
+// Metrics match Bear model's Z:AH factors:
 //   Lethality/Attack (adds), DamageTakenUp/DefenseDown (adds, squad-wide debuffs
 //   the hero applies), ChanceDamage/NormalDamage/SkillDamageAdds/SkillDamageWuMing
 //   (the skill-damage-chance mechanic — Reina/Wu Ming-style effects), and
@@ -18,7 +27,7 @@ export type SkillMetric =
 
 type SkillEffectsByType = Partial<Record<TroopType, Partial<Record<SkillMetric, number>>>>;
 
-export const WIDGET_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByType>> = {
+export const HERO_SKILL_EFFECTS: Record<string, Record<string, SkillEffectsByType>> = {
   "Ahmose": {
     '1': { Inf: { Lethality: 0.2, SkillDamageAdds: 0.12, DamageMultiply: 0.005 }, Lan: { DamageMultiply: 0.005 }, Mar: { DamageMultiply: 0.005 } },
     '2': { Inf: { Lethality: 0.4, SkillDamageAdds: 0.24, DamageMultiply: 0.01 }, Lan: { DamageMultiply: 0.01 }, Mar: { DamageMultiply: 0.01 } },

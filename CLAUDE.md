@@ -42,7 +42,7 @@ src/app/
       bear-trap.model.ts          # All interfaces + defaultBearTrapInputs()
     data/
       heroes.ts                   # Roster: name, class, gen, rally-leader flags
-      widget-skill-effects.ts     # Per-hero exclusive-skill effects by level (1-5)
+      hero-skill-effects.ts       # Per-hero 3-skills-combined effect by level (1-5, from star count)
       attack-by-star.ts           # Per-hero personal Attack % by whole star level (0-5)
       gen-lethality-coeff.ts      # Per-generation Lethality-per-widget-level coefficient
       troop-tier-table.ts         # FC x Tier -> per-type damage multiplier (121 rows)

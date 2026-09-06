@@ -13,10 +13,11 @@ Part of the **[Plannet WOS](https://plannet-wos.web.app)** suite.
 Ported from a community spreadsheet ("Rainbow Valley's WoS bear hunt hero skill & troop ratio
 calculator", credited to el3ctre for hero star data). Two factors drive a hero's contribution:
 
-- **Exclusive/widget skill effects** — each hero's unique skill buffs troop-type stats (Lethality,
-  Attack, damage-taken-up, defense-down, skill-damage chance/multiplier, etc.), scaling across 5
-  levels tied to star count. This is the dominant factor and is modeled exactly
-  (`core/data/widget-skill-effects.ts`).
+- **Native skill effects** — each hero has 3 skills, all unlocked and leveled together purely by
+  star count (0★ already has Skill 1 at level 1, capping at level 5 by 4★), buffing troop-type
+  stats (Lethality, Attack, damage-taken-up, defense-down, skill-damage chance/multiplier, etc.).
+  This is the dominant factor and is modeled exactly as the sum of the hero's 3 skills at their
+  current level (`core/data/hero-skill-effects.ts`).
 - **Personal stat growth** — each hero's own flat Lethality (from widget level × a generation
   coefficient) and Attack (a hand-curated per-hero, per-star-level table) contribute a smaller
   amount on top.
