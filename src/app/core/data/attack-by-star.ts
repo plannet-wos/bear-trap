@@ -1,21 +1,24 @@
 // Per-hero personal Attack % bonus at each whole star level (0-5).
 //
-// Gen 1-6 (19 heroes): real per-hero data. Source: General lookup tables!M2:BV33
-// ('el3ctre's hero star data'), full-star rows only.
+// Gen 1-7 (22 heroes): real per-hero data. Gen 1-6 source: General lookup
+// tables!M2:BV33 ('el3ctre's hero star data'), full-star rows only. Gen 7
+// (Bradley/Edith/Gordon) was derived (see below) and then confirmed exact,
+// digit for digit, against a live in-game reading at every star 0-5.
 //
-// Gen 7-15 (27 heroes): the source spreadsheet only ever had a single "5-star
-// total" for these — 0-4★ were blank, not zero, meaning nobody had measured
-// them yet when it was built. Every one of the 19 real gen 1-6 heroes shares
-// an IDENTICAL ratio of each star's value to that hero's own 5★ value
-// (0.126144 / 0.205977 / 0.317748 / 0.474216 / 0.693287 for 0★-4★, varying by
-// under 0.00002 across all 19 — effectively a fixed design curve, not
-// coincidence). Gen 7-15's 0★-4★ values are that same fixed curve applied to
-// their existing 5★ total, which is why e.g. Bradley's is 6.5052 unchanged
-// but he now also has 0★-4★ figures instead of hard zeros. This is a
-// principled extrapolation, not measured data for these generations — replace
-// a generation's five derived values with real per-star readings as they
-// become available (see bear-trap.ts's help dialogs for how to read them
-// off the Expedition stat panel).
+// Gen 8-15 (24 heroes): the source spreadsheet only ever had a single
+// "5-star total" for these — 0-4★ were blank, not zero, meaning nobody had
+// measured them yet when it was built. Every one of the 22 confirmed-real
+// gen 1-7 heroes shares an IDENTICAL ratio of each star's value to that
+// hero's own 5★ value (0.126144 / 0.205977 / 0.317748 / 0.474216 / 0.693287
+// for 0★-4★, varying by under 0.00002 across all 22 — a fixed design curve,
+// not coincidence, and gen 7's live confirmation is a second, independent
+// generation validating it). Gen 8-15's 0★-4★ values are that same fixed
+// curve applied to their existing 5★ total, which is why e.g. Gatot's is
+// 7.8062 unchanged but he now also has 0★-4★ figures instead of hard zeros.
+// This remains a principled extrapolation, not measured data, for gen
+// 8-15 — replace a generation's five derived values with real per-star
+// readings as they become available (see bear-trap.ts's help dialogs for
+// how to read them off the Expedition stat panel).
 export const ATTACK_BY_STAR: Record<string, Record<string, number>> = {
   "Ahmose": { '0': 0.4671, '1': 0.7626999999999999, '2': 1.1765999999999999, '3': 1.756, '4': 2.5672, '5': 3.7029 },
   "Alonso": { '0': 0.303, '1': 0.4947, '2': 0.7631999999999999, '3': 1.139, '4': 1.6652, '5': 2.4019 },
